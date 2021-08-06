@@ -5,4 +5,5 @@ using UnityEngine;
 public class Goal : ScriptableObject
 {
     public string goalName;
+    public List<Action> actions;
 }

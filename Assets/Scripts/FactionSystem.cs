@@ -20,7 +20,7 @@ public class FactionSystem : MonoBehaviour
             {
                 if(!faction.factionName.Equals(otherFaction.factionName))
                 {
-                    FactionData temp = new FactionData();
+                    FactionData temp = ScriptableObject.CreateInstance<FactionData>();
                     temp.factionName = otherFaction.factionName;
                     faction.factionAwareness.Add(temp);
 
