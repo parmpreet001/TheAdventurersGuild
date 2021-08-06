@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Goal : ScriptableObject
+[CreateAssetMenu]
+public class ResourceGoal : Goal
 {
-    public string goalName;
+    public string resource;
 }

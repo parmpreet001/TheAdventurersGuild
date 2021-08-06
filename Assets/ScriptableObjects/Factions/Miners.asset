@@ -17,15 +17,20 @@ MonoBehaviour:
     items:
     - name: money
       amount: 1000
+      minValue: 0
+      maxValue: 9999
     - name: workers
       amount: 30
-    - name: leadership
-      amount: 10
+      minValue: 1
+      maxValue: 50
   attributes:
     items:
     - name: mineSafety
       amount: 50
+      minValue: 0
+      maxValue: 100
   goals:
-  - {fileID: 11400000, guid: 5b28271b4d6aeaa409c96d82fd511850, type: 2}
+  - {fileID: 11400000, guid: ede47d5ff242ad44d90f76cfa538d9d9, type: 2}
+  - {fileID: 11400000, guid: 070e0702d0992a64c80a92ab446cf1ec, type: 2}
   actions:
   - {fileID: 11400000, guid: c69782042b4cce74aa36c58fb1e6da4a, type: 2}

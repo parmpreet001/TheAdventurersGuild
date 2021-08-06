@@ -44,7 +44,7 @@ public class StringIntDictionary
     /// </summary>
     /// <param name="name">Name of the item to be added</param>
     /// <param name="amount">Amount of the item to add/subtract</param>
-    public void AddItem(string name, int amount)
+    public void Add(string name, int amount)
     {
         bool itemAlreadyExists = false;
 
@@ -78,7 +78,7 @@ public class StringIntDictionary
     /// <param name="amount">Amount of the item to add/subtract</param>
     /// <param name="minValue">Lowest value that can be set</param>
     /// <param name="maxValue">Highest value that can be set</param>
-    public void AddItem(string name, int amount, int minValue, int maxValue)
+    public void Add(string name, int amount, int minValue, int maxValue)
     {
         bool itemAlreadyExists = false;
 
