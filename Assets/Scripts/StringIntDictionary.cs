@@ -1,46 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [System.Serializable]
 
 /// <summary>
 /// Unity can't expose dictionaries in the inspector so i made my own dictionary lol
 /// Functionality is limited compared to actual dictionaries, but we can add those as needed
+/// This dictionary will be used for faction resources, attributes, and attribute opinions
 /// </summary>
 public class StringIntDictionary
 {
+    private bool hasGlobalMin, hasGlobalMax; //Whether or not this dictionary has lower/upper bounds for int values
+    private int globalMin, globalMax; //Lower and upper bounds for every int value inserted in this dictionary
+
     [System.Serializable]
     private class Item
     {
         public string name;
         public int amount;
-        public int minValue;
-        public int maxValue;
 
         public Item(string name, int amount)
         {
             this.name = name;
             this.amount = amount;
-            minValue = 0;
-            maxValue = 100;
-        }
-
-        public Item(string name, int amount, int minValue, int maxValue)
-        {
-            this.name = name;
-            this.amount = amount;
-            this.minValue = minValue;
-            this.maxValue = maxValue;
         }
     }
 
     [SerializeField]
     private List<Item> items = new List<Item>();
 
+    public StringIntDictionary(bool hasGlobalMin, bool hasGlobalMax, int globalMin = 0, int globalMax = 0)
+    {
+        this.hasGlobalMin = hasGlobalMin;
+        this.hasGlobalMax = hasGlobalMax;
+        this.globalMin = globalMin;
+        this.globalMax = globalMax;
+    }
+
     /// <summary>
     /// Will attempt to add an item to the list of items. If an item already exists, the function will
-    /// simply modify the value
+    /// modify the value. Not case sensitive.
     /// </summary>
     /// <param name="name">Name of the item to be added</param>
     /// <param name="amount">Amount of the item to add/subtract</param>
@@ -59,44 +60,62 @@ public class StringIntDictionary
             if (item.name.Equals(tempName))
             {
                 itemAlreadyExists = true;
-                item.amount += amount;
+                if (!hasGlobalMin && !hasGlobalMax)
+                    item.amount += amount;
+                else
+                {
+                    if (hasGlobalMin && item.amount + amount < globalMin)
+                        item.amount = globalMax;
+                    else if (hasGlobalMax && item.amount + amount > globalMax)
+                        item.amount = globalMin;
+                    else
+                        item.amount += amount;
+                }
             }
         }
 
         //if no item with the given name was found, add it to items
         if (!itemAlreadyExists)
         {
-            items.Add(new Item(tempName, amount));
+            if(!hasGlobalMin && !hasGlobalMax)
+                items.Add(new Item(tempName, amount));
+            else
+            {
+                if (hasGlobalMin && amount < globalMin)
+                    items.Add(new Item(tempName, globalMin));
+                else if (hasGlobalMax && amount > globalMax)
+                    items.Add(new Item(tempName, globalMax));
+                else
+                    items.Add(new Item(tempName, amount));
+            }
         }
+    }
+
+    public void SetGlobalMin(int min)
+    {
+        hasGlobalMin = true;
+        globalMin = min;
+    }
+
+    public void SetGlobalMax(int max)
+    {
+        hasGlobalMax = true;
+        globalMax = max;
     }
 
     /// <summary>
-    /// Will attempt to add an item to the list of items. If an item already exists, the function will
-    /// simply modify the value.
+    /// Returns value of the given item
     /// </summary>
-    /// <param name="name">Name of the item to be added</param>
-    /// <param name="amount">Amount of the item to add/subtract</param>
-    /// <param name="minValue">Lowest value that can be set</param>
-    /// <param name="maxValue">Highest value that can be set</param>
-    public void Add(string name, int amount, int minValue, int maxValue)
+    public int GetValue(string name)
     {
-        bool itemAlreadyExists = false;
-
         string tempName = name.Trim();
-        tempName = tempName.ToLower();
-
-        foreach (Item item in items)
+        name = name.ToLower();
+        foreach(Item item in items)
         {
-            if (item.name.Equals(tempName))
-            {
-                itemAlreadyExists = true;
-                item.amount += amount;
-            }
+            if (item.name.Equals(name))
+                return item.amount;
         }
-
-        if (!itemAlreadyExists)
-        {
-            items.Add(new Item(tempName, amount, minValue, maxValue));
-        }
+        throw new Exception("Error: No such item with the name " + name + " exists within this dictionary");
     }
+
 }
