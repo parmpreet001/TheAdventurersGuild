@@ -7,19 +7,20 @@ public class TimeSystem : MonoBehaviour
 {
 
     private float tickLength = 2.5f; //Lenght of a tick in seconds. Equal to one in game hour
-    private int tickCounter = 0;
-    public GameTime gameTime;
+    private GameTime gameTime;
+    public bool timerActive = true;
+    Coroutine timeTrackerCoroutine;
 
     public event EventHandler<GameTime> TickAdded;
 
     private void Awake()
     {
-        StartCoroutine(TimeTracker());
+        timeTrackerCoroutine = StartCoroutine(TimeTracker());
     }
 
     private IEnumerator TimeTracker()
     {
-        while(true)
+        while(timerActive)
         {
             yield return new WaitForSeconds(tickLength);
             AddTick();
@@ -40,5 +41,15 @@ public class TimeSystem : MonoBehaviour
             TickAdded(this, gameTime);
         }
         Debug.Log("Day: " + gameTime.day + ", Hour: " + gameTime.hour);
+    }
+
+    public void StartTimer()
+    {
+        timeTrackerCoroutine = StartCoroutine(TimeTracker());
+    }
+
+    public void StopTimer()
+    {
+        StopCoroutine(timeTrackerCoroutine);
     }
 }
