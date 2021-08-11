@@ -5,17 +5,12 @@ using UnityEngine;
 
 public class TimeSystem : MonoBehaviour
 {
-    public struct GameTime
-    {
-        public int hour;
-        public int day;
-    }
 
     private float tickLength = 2.5f; //Lenght of a tick in seconds. Equal to one in game hour
     private int tickCounter = 0;
     public GameTime gameTime;
 
-    public event System.EventHandler TickAdded;
+    public event EventHandler<GameTime> TickAdded;
 
     private void Awake()
     {
@@ -42,7 +37,7 @@ public class TimeSystem : MonoBehaviour
 
         if (TickAdded != null)
         {
-            TickAdded(this, EventArgs.Empty);
+            TickAdded(this, gameTime);
         }
         Debug.Log("Day: " + gameTime.day + ", Hour: " + gameTime.hour);
     }
