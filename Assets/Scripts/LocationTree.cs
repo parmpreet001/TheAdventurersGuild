@@ -6,16 +6,15 @@ using UnityEngine;
 public class LocationTree : MonoBehaviour
 {
     private Location root;
-    [SerializeField]
     private List<Location> locations = new List<Location>();
 
 
     /// <summary>
-    /// Attaches a new Location to an already existing location
+    /// Creates an undirected link between two locations
     /// </summary>
-    /// <param name="locationName">Name of the existing location</param>
-    /// <param name="newLocation">New Location to be added</param>
-    public void AddLocation(string locationName, Location newLocation)
+    /// <param name="parentLocationName">Name of the parent location</param>
+    /// <param name="childLocation">New Location to be added to parrent</param>
+    public void AddLocation(string parentLocationName, Location childLocation)
     {
         if (root == null)
             throw new Exception("Exception: A root location has not been set");
@@ -23,13 +22,20 @@ public class LocationTree : MonoBehaviour
         {
             foreach(Location loc in locations)
             {
-                if(loc.locationName.Equals(locationName))
+                //If the parent location exists
+                if(loc.locationName.Equals(parentLocationName))
                 {
-                    loc.connectedLocations.Add(newLocation);
-                    if(!Search(newLocation.locationName))
+                    if (loc.Search(childLocation))
+                        throw new Exception("Exception: The connection that you are trying to add already exists");
+                    //Adds link from parent location to child location
+                    loc.connectedLocations.Add(childLocation);
+                    //If child location does not already exist in tree
+                    if(!Search(childLocation.locationName))
                     {
-                        locations.Add(newLocation);
+                        locations.Add(childLocation);
                     }
+                    //Adds link from child location to parent location
+                    childLocation.connectedLocations.Add(GetLocation(parentLocationName));
                     return;
                 }
             }
@@ -47,6 +53,18 @@ public class LocationTree : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public Location GetLocation(string name)
+    {
+        foreach (Location loc in locations)
+        {
+            if (loc.locationName.Equals(name))
+            {
+                return loc;
+            }
+        }
+        throw new Exception("Exception: No location by that name was found");
     }
 
     public void SetRoot(Location location)
@@ -79,6 +97,6 @@ public class LocationTree : MonoBehaviour
         AddLocation("location 3", location7);
         AddLocation("location 6", location7);
 
-
+        AddLocation("location 7", location6);
     }
 }
