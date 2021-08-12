@@ -9,7 +9,7 @@ public class Location
     private const int maxDangerLevel = 10;
 
     public string locationName;
-    public int dangerLevel;
+    private int dangerLevel;
 
     public int DangerLevel
     {
@@ -32,4 +32,29 @@ public class Location
         this.locationName = locationName;
         this.dangerLevel = dangerLevel;
     }
+
+    /// <summary>
+    /// Returns true if this location is connected to another location of the given name
+    /// </summary>
+    public bool Search(string name)
+    {
+        foreach(Location location in connectedLocations)
+        {
+            if (name.Equals(location.locationName))
+                return true;
+        }
+        return false;
+    }
+
+    /// <summary>Returns true if this location is connected to the given location</summary>
+    public bool Search(Location location)
+    {
+        foreach(Location loc in connectedLocations)
+        {
+            if (loc.locationName.Equals(location.locationName))
+                return true;
+        }
+        return false;
+    }
+
 }
