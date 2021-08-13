@@ -18,6 +18,7 @@ public class Adventurer : Entity
 
     private int experience;
     private List<Bond> bonds = new List<Bond>();
+    private float avgBond;
 
     public Adventurer(string name, Stats stats)
     {
@@ -41,5 +42,38 @@ public class Adventurer : Entity
         }
     }
 
+    public void SetAvgBond()
+    {
+        float temp = 0;
+        foreach(Bond bond in bonds)
+        {
+            temp += bond.bondLevel;
+        }
+        avgBond = temp / bonds.Count;
+    }
 
+    public float GetAtk()
+    {
+        return Stats.atk * avgBond;
+    }
+
+    public float GetTrt()
+    {
+        return Stats.trt * avgBond;
+    }
+
+    public float GetCmp()
+    {
+        return Stats.cmp * avgBond;
+    }
+
+    public float GetIntl()
+    {
+        return Stats.intl * avgBond;
+    }
+
+    public float GetWis()
+    {
+        return Stats.wis * avgBond;
+    }
 }
