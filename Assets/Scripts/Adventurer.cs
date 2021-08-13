@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Adventurer : MonoBehaviour
+public class Adventurer : Entity
 {
     public struct Bond
     {
@@ -16,11 +16,8 @@ public class Adventurer : MonoBehaviour
         }
     }
 
-    public string Name { get; private set; }
-    public Stats Stats { get; private set; }
-    private List<Bond> bonds = new List<Bond>();
-    private int level;
     private int experience;
+    private List<Bond> bonds = new List<Bond>();
 
     public Adventurer(string name, Stats stats)
     {
@@ -33,6 +30,16 @@ public class Adventurer : MonoBehaviour
         bonds.Add(new Bond(name, bondLevel));
     }
     
+    public void AddExperience(int experienceAmount)
+    {
+        experience += experienceAmount;
+        if(experience >= 100)
+        {
+            Level++;
+            experience -= 100;
+            //TODO: Stat changes
+        }
+    }
 
 
 }
