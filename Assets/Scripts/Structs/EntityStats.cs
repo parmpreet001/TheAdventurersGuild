@@ -1,9 +1,9 @@
-public struct Stats
+public struct EntityStats
 {
     public int hp, atk, trt, cmp, intl, wis;
-    public static Stats operator+(Stats a, Stats b)
+    public static EntityStats operator+(EntityStats a, EntityStats b)
     {
-        Stats stats = new Stats();
+        EntityStats stats = new EntityStats();
         stats.hp = a.hp + b.hp;
         stats.atk = a.atk + b.atk;
         stats.trt = a.trt + b.trt;

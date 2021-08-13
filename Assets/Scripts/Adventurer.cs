@@ -20,7 +20,7 @@ public class Adventurer : Entity
     private List<Bond> bonds = new List<Bond>();
     private float avgBond;
 
-    public Adventurer(string name, Stats stats)
+    public Adventurer(string name, EntityStats stats)
     {
         Name = name;
         this.Stats = stats;
