@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 public class Adventurer : Entity
 {
     private int experience;
-    public Dictionary<string, float> bonds = new Dictionary<string, float>();    
+    public Dictionary<string, float> Bonds { get; private set; } = new Dictionary<string, float>();
 
     public Adventurer(string name, EntityStats stats)
     {
@@ -13,9 +14,12 @@ public class Adventurer : Entity
         this.Stats = stats;
     }
 
-    public void AddBond(string name, float bondLevel)
+    public void SetBondLevel(string name, float bondLevel)
     {
-        bonds.Add(name, bondLevel);
+        if (Bonds.ContainsKey(name))
+            Bonds[name] = bondLevel;
+        else
+            Bonds.Add(name, bondLevel);
     }
     
     public void AddExperience(int experienceAmount)
@@ -29,14 +33,16 @@ public class Adventurer : Entity
         }
     }
 
-    public void GetAvgBond(params string[] partyMembers)
+    public float GetAvgBond(List<string> partyMembers)
     {
+        if (partyMembers.Count == 0)
+            throw new Exception("Error: Need at least one other party member to calculate avg bond");
         float avgBond = 0;
         foreach(string partyMember in partyMembers)
         {
-            avgBond += bonds[partyMember];
+            avgBond += Bonds[partyMember];
         }
-        avgBond /= partyMembers.Length;
+        return avgBond /= partyMembers.Count;
     }
 
     public float GetAtk(float avgBond)
@@ -62,5 +68,14 @@ public class Adventurer : Entity
     public float GetWis(float avgBond)
     {
         return Stats.wis * avgBond;
+    }
+
+    public void PrintBondLevels()
+    {
+        Debug.Log(Name + "'s bonds:");
+        foreach (KeyValuePair<string,float> bond in Bonds)
+        {
+            Debug.Log(bond.Key + ", " + bond.Value);
+        }
     }
 }
