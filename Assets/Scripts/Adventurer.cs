@@ -4,21 +4,8 @@ using UnityEngine;
 
 public class Adventurer : Entity
 {
-    public struct Bond
-    {
-        public string name;
-        public float bondLevel;
-
-        public Bond(string name, float bondLevel)
-        {
-            this.name = name;
-            this.bondLevel = bondLevel;
-        }
-    }
-
     private int experience;
-    private List<Bond> bonds = new List<Bond>();
-    private float avgBond;
+    public Dictionary<string, float> bonds = new Dictionary<string, float>();    
 
     public Adventurer(string name, EntityStats stats)
     {
@@ -28,7 +15,7 @@ public class Adventurer : Entity
 
     public void AddBond(string name, float bondLevel)
     {
-        bonds.Add(new Bond(name, bondLevel));
+        bonds.Add(name, bondLevel);
     }
     
     public void AddExperience(int experienceAmount)
@@ -42,37 +29,37 @@ public class Adventurer : Entity
         }
     }
 
-    public void SetAvgBond()
+    public void GetAvgBond(params string[] partyMembers)
     {
-        float temp = 0;
-        foreach(Bond bond in bonds)
+        float avgBond = 0;
+        foreach(string partyMember in partyMembers)
         {
-            temp += bond.bondLevel;
+            avgBond += bonds[partyMember];
         }
-        avgBond = temp / bonds.Count;
+        avgBond /= partyMembers.Length;
     }
 
-    public float GetAtk()
+    public float GetAtk(float avgBond)
     {
         return Stats.atk * avgBond;
     }
 
-    public float GetTrt()
+    public float GetTrt(float avgBond)
     {
         return Stats.trt * avgBond;
     }
 
-    public float GetCmp()
+    public float GetCmp(float avgBond)
     {
         return Stats.cmp * avgBond;
     }
 
-    public float GetIntl()
+    public float GetIntl(float avgBond)
     {
         return Stats.intl * avgBond;
     }
 
-    public float GetWis()
+    public float GetWis(float avgBond)
     {
         return Stats.wis * avgBond;
     }
