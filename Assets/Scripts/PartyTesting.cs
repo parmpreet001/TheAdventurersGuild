@@ -9,7 +9,6 @@ public class PartyTesting : MonoBehaviour
         Party party = new Party(Party.PartyType.ADVENTURER);
         Roster roster = new Roster();
 
-
         Adventurer tom = new Adventurer("Tom", new EntityStats(10, 10, 10, 10, 10, 10));
         Adventurer eric = new Adventurer("Eric", new EntityStats(15, 15, 15, 15, 15, 15));
         Adventurer bitch = new Adventurer("Bitch", new EntityStats(16, 16, 16, 16, 16, 16));
@@ -20,16 +19,21 @@ public class PartyTesting : MonoBehaviour
 
         roster.SetBondLevel("Tom", "Eric", 1.2f);
 
-        party.AddMember(tom);
-        party.AddMember(eric);
-        party.AddMember(bitch);
+        party.members.Add(tom);
+        party.members.Add(eric);
+        party.members.Add(bitch);
 
         //tom.PrintBondLevels();
         //eric.PrintBondLevels();
         //bitch.PrintBondLevels();
 
         party.CalculatePartyStats();
-        Debug.Log(party.TotalHp);
-        Debug.Log(party.TotalAtk);
+        party.PrintStats();
+
+        Debug.Log("Removing tom from the party and re-calculating stats");
+        party.members.Remove(tom);
+
+        party.CalculatePartyStats();
+        party.PrintStats();
     }
 }

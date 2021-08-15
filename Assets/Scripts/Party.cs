@@ -9,7 +9,7 @@ public class Party
         ENEMY, ADVENTURER
     }
 
-    private List<Entity> members = new List<Entity>();
+    public List<Entity> members = new List<Entity>();
     public int TotalHp { get; private set; }
     public float TotalAtk { get; private set; }
     public float TotalTrt { get; private set; }
@@ -23,14 +23,9 @@ public class Party
         this.partyType = partyType;
     }
 
-    public void AddMember(Entity member)
-    {
-        members.Add(member);
-    }
-
-
     public void CalculatePartyStats()
     {
+        ResetStats();
         if(partyType == PartyType.ADVENTURER)
         {
             
@@ -64,5 +59,21 @@ public class Party
                 TotalWis += member.Stats.wis;
             }
         }
+    }
+
+    public void PrintStats()
+    {
+        Debug.Log("Total HP: " + TotalHp);
+        Debug.Log("Total Atk: " + TotalAtk);
+        Debug.Log("Total Trt: " + TotalTrt);
+        Debug.Log("Total Cmp: " + TotalCmp);
+        Debug.Log("Total Intl: " + TotalIntl);
+        Debug.Log("Total Wis: " + TotalWis);
+    }
+
+    private void ResetStats()
+    {
+        TotalHp = 0;
+        TotalAtk = TotalCmp = TotalIntl = TotalTrt = TotalWis = 0f;
     }
 }

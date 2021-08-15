@@ -33,6 +33,7 @@ public class Adventurer : Entity
         }
     }
 
+    /// <summary> Calculate the average bond between this member and the given list of party members </summary>
     public float GetAvgBond(List<string> partyMembers)
     {
         if (partyMembers.Count == 0)
