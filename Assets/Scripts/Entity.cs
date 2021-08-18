@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Entity
 {
-    public string Name { get; protected set; }
-    public EntityStats Stats { get; protected set; }
-    public int Level { get; protected set; }
+    public string entityName;
+    public EntityStats stats;
+    public int level;
 }
