@@ -12,16 +12,16 @@ public class Roster
     public void AddGuildMember(Adventurer newMember)
     {
         //If there is already a member with the same name, throw an exception
-        if(guildMembers.ContainsKey(newMember.Name))
+        if(guildMembers.ContainsKey(newMember.entityName))
             throw new Exception("Error: Guild Member with this name already exists");
 
         //Create new bonds between the new member and all other members, using a default value of 1
         foreach(Adventurer member in guildMembers.Values)
         {
-            member.SetBondLevel(newMember.Name, 1f);
-            newMember.SetBondLevel(member.Name, 1f);
+            member.SetBondLevel(newMember.entityName, 1f);
+            newMember.SetBondLevel(member.entityName, 1f);
         }
-        guildMembers.Add(newMember.Name, newMember);
+        guildMembers.Add(newMember.entityName, newMember);
     }
 
     /// <summary> Set a bond level between two guild members. </summary>

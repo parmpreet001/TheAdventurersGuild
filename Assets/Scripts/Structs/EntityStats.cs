@@ -1,6 +1,7 @@
 public struct EntityStats
 {
-    public int hp, atk, trt, cmp, intl, wis;
+    public float hp;
+    public int atk, trt, cmp, intl, wis;
 
     public EntityStats(int hp, int atk, int trt, int cmp, int intl, int wis)
     {

@@ -31,8 +31,13 @@ public class PartyTesting : MonoBehaviour
         party.PrintStats();
 
         Debug.Log("Removing tom from the party and re-calculating stats");
-        party.members.Remove(tom);
+        //party.members.Remove(tom);
 
+        party.CalculatePartyStats();
+        party.PrintStats();
+
+        Debug.Log("Party took 10 damage");
+        party.TakeDamage(10);
         party.CalculatePartyStats();
         party.PrintStats();
     }

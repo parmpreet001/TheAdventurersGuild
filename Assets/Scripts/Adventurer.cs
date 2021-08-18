@@ -10,8 +10,8 @@ public class Adventurer : Entity
 
     public Adventurer(string name, EntityStats stats)
     {
-        Name = name;
-        this.Stats = stats;
+        base.entityName = name;
+        this.stats = stats;
     }
 
     public void SetBondLevel(string name, float bondLevel)
@@ -27,7 +27,7 @@ public class Adventurer : Entity
         experience += experienceAmount;
         if(experience >= 100)
         {
-            Level++;
+            level++;
             experience -= 100;
             //TODO: Stat changes
         }
@@ -48,32 +48,32 @@ public class Adventurer : Entity
 
     public float GetAtk(float avgBond)
     {
-        return Stats.atk * avgBond;
+        return stats.atk * avgBond;
     }
 
     public float GetTrt(float avgBond)
     {
-        return Stats.trt * avgBond;
+        return stats.trt * avgBond;
     }
 
     public float GetCmp(float avgBond)
     {
-        return Stats.cmp * avgBond;
+        return stats.cmp * avgBond;
     }
 
     public float GetIntl(float avgBond)
     {
-        return Stats.intl * avgBond;
+        return stats.intl * avgBond;
     }
 
     public float GetWis(float avgBond)
     {
-        return Stats.wis * avgBond;
+        return stats.wis * avgBond;
     }
 
     public void PrintBondLevels()
     {
-        Debug.Log(Name + "'s bonds:");
+        Debug.Log(entityName + "'s bonds:");
         foreach (KeyValuePair<string,float> bond in Bonds)
         {
             Debug.Log(bond.Key + ", " + bond.Value);

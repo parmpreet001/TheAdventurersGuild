@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Party
 {
@@ -10,7 +11,7 @@ public class Party
     }
 
     public List<Entity> members = new List<Entity>();
-    public int TotalHp { get; private set; }
+    public float TotalHp { get; private set; }
     public float TotalAtk { get; private set; }
     public float TotalTrt { get; private set; }
     public float TotalCmp { get; private set; }
@@ -34,12 +35,12 @@ public class Party
                 List<string> otherMembers = new List<string>();
                 foreach(Adventurer otherMember in members)
                 {
-                    if (!otherMember.Name.Equals(member.Name))
-                        otherMembers.Add(otherMember.Name);
+                    if (!otherMember.entityName.Equals(member.entityName))
+                        otherMembers.Add(otherMember.entityName);
                 }
                 float memberAvgBond = member.GetAvgBond(otherMembers);
-                Debug.Log(member.Name + "'s average bond is " + memberAvgBond);
-                TotalHp += member.Stats.hp;
+                Debug.Log(member.entityName + "'s average bond is " + memberAvgBond);
+                TotalHp += member.stats.hp;
                 TotalAtk += member.GetAtk(memberAvgBond);
                 TotalTrt += member.GetTrt(memberAvgBond);
                 TotalCmp += member.GetCmp(memberAvgBond);
@@ -51,13 +52,22 @@ public class Party
         {
             foreach(Enemy member in members)
             {
-                TotalHp += member.Stats.hp;
-                TotalAtk += member.Stats.atk;
-                TotalTrt += member.Stats.trt;
-                TotalCmp += member.Stats.cmp;
-                TotalIntl += member.Stats.intl;
-                TotalWis += member.Stats.wis;
+                TotalHp += member.stats.hp;
+                TotalAtk += member.stats.atk;
+                TotalTrt += member.stats.trt;
+                TotalCmp += member.stats.cmp;
+                TotalIntl += member.stats.intl;
+                TotalWis += member.stats.wis;
             }
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        foreach(Entity member in members)
+        {
+            member.stats.hp -= (float)Math.Round((damage * (member.stats.trt / TotalTrt)),1);
+            Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.stats.trt / TotalTrt)), 1) + " damage");
         }
     }
 
@@ -73,7 +83,6 @@ public class Party
 
     private void ResetStats()
     {
-        TotalHp = 0;
-        TotalAtk = TotalCmp = TotalIntl = TotalTrt = TotalWis = 0f;
+        TotalHp = TotalAtk = TotalCmp = TotalIntl = TotalTrt = TotalWis = 0f;
     }
 }
