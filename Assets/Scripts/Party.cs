@@ -28,8 +28,7 @@ public class Party
     {
         ResetStats();
         if(partyType == PartyType.ADVENTURER)
-        {
-            
+        { 
             foreach(Adventurer member in members)
             { 
                 List<string> otherMembers = new List<string>();
@@ -38,14 +37,14 @@ public class Party
                     if (!otherMember.entityName.Equals(member.entityName))
                         otherMembers.Add(otherMember.entityName);
                 }
-                float memberAvgBond = member.GetAvgBond(otherMembers);
-                Debug.Log(member.entityName + "'s average bond is " + memberAvgBond);
+                member.SetAvgBond(otherMembers);
+                Debug.Log(member.entityName + "'s average bond is " + member.avgBond);
                 TotalHp += member.stats.hp;
-                TotalAtk += member.GetAtk(memberAvgBond);
-                TotalTrt += member.GetTrt(memberAvgBond);
-                TotalCmp += member.GetCmp(memberAvgBond);
-                TotalIntl += member.GetIntl(memberAvgBond);
-                TotalWis += member.GetWis(memberAvgBond);
+                TotalAtk += member.GetAtk();
+                TotalTrt += member.GetTrt();
+                TotalCmp += member.GetCmp();
+                TotalIntl += member.GetIntl();
+                TotalWis += member.GetWis();
             }
         }
         else
@@ -64,11 +63,15 @@ public class Party
 
     public void TakeDamage(int damage)
     {
-        foreach(Entity member in members)
+        if(partyType == PartyType.ADVENTURER)
         {
-            member.stats.hp -= (float)Math.Round((damage * (member.stats.trt / TotalTrt)),1);
-            Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.stats.trt / TotalTrt)), 1) + " damage");
+            foreach(Adventurer member in members)
+            {
+                member.stats.hp -= (float)Math.Round((damage * (member.GetTrt(member.avgBond) / TotalTrt)),1);
+                Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.GetTrt(member.avgBond) / TotalTrt)), 1) + " damage");
+            }
         }
+
     }
 
     public void PrintStats()
