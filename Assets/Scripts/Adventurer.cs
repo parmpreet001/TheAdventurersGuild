@@ -6,6 +6,7 @@ using UnityEngine;
 public class Adventurer : Entity
 {
     private int experience;
+    public float avgBond;
     public Dictionary<string, float> Bonds { get; private set; } = new Dictionary<string, float>();
 
     public Adventurer(string name, EntityStats stats)
@@ -34,39 +35,40 @@ public class Adventurer : Entity
     }
 
     /// <summary> Calculate the average bond between this member and the given list of party members </summary>
-    public float GetAvgBond(List<string> partyMembers)
+    public void SetAvgBond(List<string> partyMembers)
     {
+        avgBond = 0;
         if (partyMembers.Count == 0)
             throw new Exception("Error: Need at least one other party member to calculate avg bond");
-        float avgBond = 0;
+        
         foreach(string partyMember in partyMembers)
         {
             avgBond += Bonds[partyMember];
         }
-        return avgBond /= partyMembers.Count;
+        avgBond /= partyMembers.Count;
     }
 
-    public float GetAtk(float avgBond)
+    public float GetAtk()
     {
         return stats.atk * avgBond;
     }
 
-    public float GetTrt(float avgBond)
+    public float GetTrt()
     {
         return stats.trt * avgBond;
     }
 
-    public float GetCmp(float avgBond)
+    public float GetCmp()
     {
         return stats.cmp * avgBond;
     }
 
-    public float GetIntl(float avgBond)
+    public float GetIntl()
     {
         return stats.intl * avgBond;
     }
 
-    public float GetWis(float avgBond)
+    public float GetWis()
     {
         return stats.wis * avgBond;
     }
