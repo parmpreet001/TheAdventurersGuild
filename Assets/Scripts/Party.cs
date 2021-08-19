@@ -67,8 +67,8 @@ public class Party
         {
             foreach(Adventurer member in members)
             {
-                member.stats.hp -= (float)Math.Round((damage * (member.GetTrt(member.avgBond) / TotalTrt)),1);
-                Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.GetTrt(member.avgBond) / TotalTrt)), 1) + " damage");
+                member.stats.hp -= (float)Math.Round((damage * (member.GetTrt() / TotalTrt)),1);
+                Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.GetTrt() / TotalTrt)), 1) + " damage");
             }
         }
 
