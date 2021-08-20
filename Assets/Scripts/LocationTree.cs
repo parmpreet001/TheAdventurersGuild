@@ -6,6 +6,7 @@ using UnityEngine;
 public class LocationTree : MonoBehaviour
 {
     private Location root;
+    [SerializeField]
     private List<Location> locations = new List<Location>();
 
 
@@ -14,7 +15,7 @@ public class LocationTree : MonoBehaviour
     /// </summary>
     /// <param name="parentLocationName">Name of the parent location</param>
     /// <param name="childLocation">New Location to be added to parrent</param>
-    public void AddLocation(string parentLocationName, Location childLocation)
+    public void AddLocation(string parentLocationName, Location childLocation, float edgeWeight)
     {
         if (root == null)
             throw new Exception("Exception: A root location has not been set");
@@ -28,14 +29,18 @@ public class LocationTree : MonoBehaviour
                     if (loc.Search(childLocation))
                         throw new Exception("Exception: The connection that you are trying to add already exists");
                     //Adds link from parent location to child location
-                    loc.connectedLocations.Add(childLocation);
+                    loc.connectedLocations.Add(childLocation.locationName);
                     //If child location does not already exist in tree
                     if(!Search(childLocation.locationName))
                     {
                         locations.Add(childLocation);
                     }
                     //Adds link from child location to parent location
-                    childLocation.connectedLocations.Add(GetLocation(parentLocationName));
+                    childLocation.connectedLocations.Add(parentLocationName);
+
+                    loc.edgeWeights.Add(childLocation.locationName,edgeWeight);
+                    childLocation.edgeWeights.Add(parentLocationName, edgeWeight);
+
                     return;
                 }
             }
@@ -88,15 +93,15 @@ public class LocationTree : MonoBehaviour
 
         SetRoot(location1);
 
-        AddLocation("location 1", location2);
-        AddLocation("location 1", location3);
-        AddLocation("location 2", location4);
-        AddLocation("location 2", location5);
-        AddLocation("location 2", location6);
-        AddLocation("location 3", location6);
-        AddLocation("location 3", location7);
-        AddLocation("location 6", location7);
+        AddLocation("location 1", location2, 1);
+        AddLocation("location 1", location3, 1);
+        AddLocation("location 2", location4, 1);
+        AddLocation("location 2", location5, 1);
+        AddLocation("location 2", location6, 1);
+        AddLocation("location 3", location6, 1);
+        AddLocation("location 3", location7, 1);
+        AddLocation("location 6", location7, 1);
 
-        AddLocation("location 7", location6);
+        AddLocation("location 7", location6, 1);
     }
 }

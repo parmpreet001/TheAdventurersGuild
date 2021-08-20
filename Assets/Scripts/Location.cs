@@ -25,7 +25,8 @@ public class Location
         }
     }
 
-    public List<Location> connectedLocations = new List<Location>();
+    public List<string> connectedLocations = new List<string>();
+    public Dictionary<string, float> edgeWeights = new Dictionary<string, float>();
 
     public Location(string locationName, int dangerLevel)
     {
@@ -38,9 +39,9 @@ public class Location
     /// </summary>
     public bool Search(string name)
     {
-        foreach(Location location in connectedLocations)
+        foreach(string location in connectedLocations)
         {
-            if (name.Equals(location.locationName))
+            if (name.Equals(location))
                 return true;
         }
         return false;
@@ -49,9 +50,9 @@ public class Location
     /// <summary>Returns true if this location is connected to the given location</summary>
     public bool Search(Location location)
     {
-        foreach(Location loc in connectedLocations)
+        foreach(string loc in connectedLocations)
         {
-            if (loc.locationName.Equals(location.locationName))
+            if (loc.Equals(location.locationName))
                 return true;
         }
         return false;
