@@ -15,7 +15,7 @@ public class LocationTree : MonoBehaviour
     /// </summary>
     /// <param name="parentLocationName">Name of the parent location</param>
     /// <param name="childLocation">New Location to be added to parrent</param>
-    public void AddLocation(string parentLocationName, Location childLocation, float edgeWeight)
+    public void AddLocation(string parentLocationName, Location childLocation, int edgeWeight)
     {
         if (root == null)
             throw new Exception("Exception: A root location has not been set");
@@ -79,29 +79,105 @@ public class LocationTree : MonoBehaviour
     }
 
 
+    public Stack<Location> FindPath(Location startLocation, Location targetLocation)
+    {
+        Stack<Location> path = new Stack<Location>();
+        Location currentLoc = null;
+        Location previousLoc = null;
+
+        foreach(Location loc in locations)
+        {
+            loc.distance = 100;
+            loc.visited = false;
+            loc.prev = null;
+        }
+
+        startLocation.distance = 0;
+
+        while(!targetLocation.visited)
+        {
+            Location loc = GetNearestUnexploredLocation();
+            loc.visited = true;
+            foreach(string neighbor in loc.connectedLocations)
+            {
+                if(loc.distance + loc.edgeWeights[neighbor] < GetLocation(neighbor).distance)
+                {
+                    GetLocation(neighbor).distance = loc.distance + loc.edgeWeights[neighbor];
+                    GetLocation(neighbor).prev = loc;
+                }
+            }
+        }
+
+        Debug.Log("Shortest path between " + startLocation.locationName + " and " + targetLocation.locationName
+            + " is " + targetLocation.distance);
+
+        path.Push(targetLocation);
+        while(path.Peek().locationName != startLocation.locationName)
+        {
+            path.Push(path.Peek().prev);
+        }
+
+        return path;
+    }
+
+    private Location GetNearestUnexploredLocation()
+    {
+        Location temp = null;
+        foreach(Location loc in locations)
+        {
+            if(!loc.visited)
+            {
+                temp = loc;
+                break;
+            }
+        }
+
+        foreach(Location loc in locations)
+        {
+            if (!loc.visited && loc.distance < temp.distance)
+                temp = loc;
+        }
+        return temp;
+    }
+
+
 
     //Just used for testing. Will get deleted later
     private void Start()
     {
-        Location location1 = new Location("location 1", 1);
-        Location location2 = new Location("location 2", 1);
-        Location location3 = new Location("location 3", 1);
-        Location location4 = new Location("location 4", 1);
-        Location location5 = new Location("location 5", 1);
-        Location location6 = new Location("location 6", 1);
-        Location location7 = new Location("location 7", 1);
+        Location locationA = new Location("location A", 1);
+        Location locationB = new Location("location B", 1);
+        Location locationC = new Location("location C", 1);
+        Location locationD = new Location("location D", 1);
+        Location locationE = new Location("location E", 1);
+        Location locationF = new Location("location F", 1);
+        Location locationG = new Location("location G", 1);
 
-        SetRoot(location1);
+        SetRoot(locationA);
 
-        AddLocation("location 1", location2, 1);
-        AddLocation("location 1", location3, 1);
-        AddLocation("location 2", location4, 1);
-        AddLocation("location 2", location5, 1);
-        AddLocation("location 2", location6, 1);
-        AddLocation("location 3", location6, 1);
-        AddLocation("location 3", location7, 1);
-        AddLocation("location 6", location7, 1);
+        AddLocation("location A", locationC, 3);
+        AddLocation("location A", locationF, 2);
+        AddLocation("location C", locationD, 4);
+        AddLocation("location C", locationE, 1);
+        AddLocation("location C", locationF, 2);
+        AddLocation("location F", locationE, 3);
+        AddLocation("location F", locationB, 6);
+        AddLocation("location F", locationG, 5);
+        AddLocation("location E", locationB, 2);
+        AddLocation("location D", locationB, 1);
+        AddLocation("location G", locationB, 2);
 
-        AddLocation("location 7", location6, 1);
+        Stack<Location> path = FindPath(locationA, locationB);
+
+        Debug.Log("Path from location A to location B");
+        while (path.Count > 0)
+        {
+            Debug.Log(path.Pop().locationName);
+        }
+
+
+
+
+        
     }
 }

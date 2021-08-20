@@ -10,6 +10,10 @@ public class Location
 
     public string locationName;
     private int dangerLevel;
+    public bool visited;
+    public int distance = -1;
+    [SerializeField]
+    public Location prev;
 
     public int DangerLevel
     {
@@ -26,7 +30,7 @@ public class Location
     }
 
     public List<string> connectedLocations = new List<string>();
-    public Dictionary<string, float> edgeWeights = new Dictionary<string, float>();
+    public Dictionary<string, int> edgeWeights = new Dictionary<string, int>();
 
     public Location(string locationName, int dangerLevel)
     {
