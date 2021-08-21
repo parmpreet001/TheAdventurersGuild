@@ -31,20 +31,23 @@ public class Party
         { 
             foreach(Adventurer member in members)
             { 
-                List<string> otherMembers = new List<string>();
-                foreach(Adventurer otherMember in members)
+                if(!member.isDead)
                 {
-                    if (!otherMember.entityName.Equals(member.entityName))
-                        otherMembers.Add(otherMember.entityName);
+                    List<string> otherMembers = new List<string>();
+                    foreach(Adventurer otherMember in members)
+                    {
+                        if (!otherMember.entityName.Equals(member.entityName) && !otherMember.isDead)
+                            otherMembers.Add(otherMember.entityName);
+                    }
+                    member.SetAvgBond(otherMembers);
+                    Debug.Log(member.entityName + "'s average bond is " + member.avgBond);
+                    TotalHp += member.stats.hp;
+                    TotalAtk += member.GetAtk();
+                    TotalTrt += member.GetTrt();
+                    TotalCmp += member.GetCmp();
+                    TotalIntl += member.GetIntl();
+                    TotalWis += member.GetWis();
                 }
-                member.SetAvgBond(otherMembers);
-                Debug.Log(member.entityName + "'s average bond is " + member.avgBond);
-                TotalHp += member.stats.hp;
-                TotalAtk += member.GetAtk();
-                TotalTrt += member.GetTrt();
-                TotalCmp += member.GetCmp();
-                TotalIntl += member.GetIntl();
-                TotalWis += member.GetWis();
             }
         }
         else
@@ -69,9 +72,13 @@ public class Party
             {
                 member.stats.hp -= (float)Math.Round((damage * (member.GetTrt() / TotalTrt)),1);
                 Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.GetTrt() / TotalTrt)), 1) + " damage");
+                if (member.stats.hp <= 0)
+                {
+                    member.isDead = true;
+                    Debug.Log(member.entityName + " fucking died");
+                }
             }
         }
-
     }
 
     public void PrintStats()

@@ -9,7 +9,7 @@ public class PartyTesting : MonoBehaviour
         Party party = new Party(Party.PartyType.ADVENTURER);
         Roster roster = new Roster();
 
-        Adventurer tom = new Adventurer("Tom", new EntityStats(10, 10, 10, 10, 10, 10));
+        Adventurer tom = new Adventurer("Tom", new EntityStats(10, 10, 20, 10, 10, 10));
         Adventurer eric = new Adventurer("Eric", new EntityStats(15, 15, 15, 15, 15, 15));
         Adventurer bitch = new Adventurer("Bitch", new EntityStats(16, 16, 16, 16, 16, 16));
 
@@ -30,14 +30,9 @@ public class PartyTesting : MonoBehaviour
         party.CalculatePartyStats();
         party.PrintStats();
 
-        Debug.Log("Removing tom from the party and re-calculating stats");
-        //party.members.Remove(tom);
 
-        party.CalculatePartyStats();
-        party.PrintStats();
-
-        Debug.Log("Party took 10 damage");
-        party.TakeDamage(10);
+        Debug.Log("Party took 35 damage");
+        party.TakeDamage(35);
         party.CalculatePartyStats();
         party.PrintStats();
     }

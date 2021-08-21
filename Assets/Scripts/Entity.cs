@@ -7,4 +7,5 @@ public class Entity
     public string entityName;
     public EntityStats stats;
     public int level;
+    public bool isDead;
 }
