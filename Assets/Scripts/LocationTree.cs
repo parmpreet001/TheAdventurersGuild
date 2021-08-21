@@ -15,7 +15,7 @@ public class LocationTree : MonoBehaviour
     /// </summary>
     /// <param name="parentLocationName">Name of the parent location</param>
     /// <param name="childLocation">New Location to be added to parrent</param>
-    public void AddLocation(string parentLocationName, Location childLocation, int edgeWeight)
+    public void AddLocationLink(string parentLocationName, Location childLocation, int edgeWeight)
     {
         if (root == null)
             throw new Exception("Exception: A root location has not been set");
@@ -38,6 +38,7 @@ public class LocationTree : MonoBehaviour
                     //Adds link from child location to parent location
                     childLocation.connectedLocations.Add(parentLocationName);
 
+                    //Sets edge weight between the two locations
                     loc.edgeWeights.Add(childLocation.locationName,edgeWeight);
                     childLocation.edgeWeights.Add(parentLocationName, edgeWeight);
 
@@ -48,6 +49,7 @@ public class LocationTree : MonoBehaviour
         }
     }
 
+    /// <summary> Returns true if a location exists in the tree </summary>
     public bool Search(string name)
     {
         foreach(Location loc in locations)
@@ -60,6 +62,7 @@ public class LocationTree : MonoBehaviour
         return false;
     }
 
+    /// <summary> Takes the name of a location and returns the respective location object </summary>
     public Location GetLocation(string name)
     {
         foreach (Location loc in locations)
@@ -82,8 +85,6 @@ public class LocationTree : MonoBehaviour
     public Stack<Location> FindPath(Location startLocation, Location targetLocation)
     {
         Stack<Location> path = new Stack<Location>();
-        Location currentLoc = null;
-        Location previousLoc = null;
 
         foreach(Location loc in locations)
         {
@@ -120,6 +121,7 @@ public class LocationTree : MonoBehaviour
         return path;
     }
 
+    /// <summary> Used for path findning. Returns the unexplored distance with the lowest distance value </summary>
     private Location GetNearestUnexploredLocation()
     {
         Location temp = null;
@@ -155,17 +157,17 @@ public class LocationTree : MonoBehaviour
 
         SetRoot(locationA);
 
-        AddLocation("location A", locationC, 3);
-        AddLocation("location A", locationF, 2);
-        AddLocation("location C", locationD, 4);
-        AddLocation("location C", locationE, 1);
-        AddLocation("location C", locationF, 2);
-        AddLocation("location F", locationE, 3);
-        AddLocation("location F", locationB, 6);
-        AddLocation("location F", locationG, 5);
-        AddLocation("location E", locationB, 2);
-        AddLocation("location D", locationB, 1);
-        AddLocation("location G", locationB, 2);
+        AddLocationLink("location A", locationC, 3);
+        AddLocationLink("location A", locationF, 2);
+        AddLocationLink("location C", locationD, 4);
+        AddLocationLink("location C", locationE, 1);
+        AddLocationLink("location C", locationF, 2);
+        AddLocationLink("location F", locationE, 3);
+        AddLocationLink("location F", locationB, 6);
+        AddLocationLink("location F", locationG, 5);
+        AddLocationLink("location E", locationB, 2);
+        AddLocationLink("location D", locationB, 1);
+        AddLocationLink("location G", locationB, 2);
 
         Stack<Location> path = FindPath(locationA, locationB);
 
@@ -173,11 +175,6 @@ public class LocationTree : MonoBehaviour
         while (path.Count > 0)
         {
             Debug.Log(path.Pop().locationName);
-        }
-
-
-
-
-        
+        }      
     }
 }

@@ -7,9 +7,9 @@ public class Location
 {
     private const int minDangerLevel = 1;
     private const int maxDangerLevel = 10;
-
-    public string locationName;
     private int dangerLevel;
+    
+    public string locationName;
     public bool visited;
     public int distance = -1;
     [SerializeField]

@@ -15,6 +15,7 @@ public class Adventurer : Entity
         this.stats = stats;
     }
 
+    /// <summary> Sets the bond level between this member and another </summary>
     public void SetBondLevel(string name, float bondLevel)
     {
         if (Bonds.ContainsKey(name))
@@ -48,27 +49,27 @@ public class Adventurer : Entity
         avgBond /= partyMembers.Count;
     }
 
-    public float GetAtk()
+    public float CalculateAtk()
     {
         return stats.atk * avgBond;
     }
 
-    public float GetTrt()
+    public float CalculateTrt()
     {
         return stats.trt * avgBond;
     }
 
-    public float GetCmp()
+    public float CalculateCmp()
     {
         return stats.cmp * avgBond;
     }
 
-    public float GetIntl()
+    public float CalculateIntl()
     {
         return stats.intl * avgBond;
     }
 
-    public float GetWis()
+    public float CalculateWisdom()
     {
         return stats.wis * avgBond;
     }

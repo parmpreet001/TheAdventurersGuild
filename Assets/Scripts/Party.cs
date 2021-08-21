@@ -34,6 +34,7 @@ public class Party
                 if(!member.isDead)
                 {
                     List<string> otherMembers = new List<string>();
+                    //Add every other alive party member that isn't the currently selected member
                     foreach(Adventurer otherMember in members)
                     {
                         if (!otherMember.entityName.Equals(member.entityName) && !otherMember.isDead)
@@ -42,11 +43,11 @@ public class Party
                     member.SetAvgBond(otherMembers);
                     Debug.Log(member.entityName + "'s average bond is " + member.avgBond);
                     TotalHp += member.stats.hp;
-                    TotalAtk += member.GetAtk();
-                    TotalTrt += member.GetTrt();
-                    TotalCmp += member.GetCmp();
-                    TotalIntl += member.GetIntl();
-                    TotalWis += member.GetWis();
+                    TotalAtk += member.CalculateAtk();
+                    TotalTrt += member.CalculateTrt();
+                    TotalCmp += member.CalculateCmp();
+                    TotalIntl += member.CalculateIntl();
+                    TotalWis += member.CalculateWisdom();
                 }
             }
         }
@@ -70,8 +71,8 @@ public class Party
         {
             foreach(Adventurer member in members)
             {
-                member.stats.hp -= (float)Math.Round((damage * (member.GetTrt() / TotalTrt)),1);
-                Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.GetTrt() / TotalTrt)), 1) + " damage");
+                member.stats.hp -= (float)Math.Round((damage * (member.CalculateTrt() / TotalTrt)),1);
+                Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.CalculateTrt() / TotalTrt)), 1) + " damage");
                 if (member.stats.hp <= 0)
                 {
                     member.isDead = true;
