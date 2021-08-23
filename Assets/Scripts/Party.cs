@@ -82,6 +82,12 @@ public class Party
         }
     }
 
+    /// <summary> Returns true if this party's cmp is less than the given party's threat </summary>
+    public bool PartyFlees(Party party)
+    {
+        return TotalCmp < party.TotalTrt;
+    }
+
     public void PrintStats()
     {
         Debug.Log("Total HP: " + TotalHp);
