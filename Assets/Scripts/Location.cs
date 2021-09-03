@@ -5,42 +5,27 @@ using UnityEngine;
 [System.Serializable]
 public class Location
 {
-    private const int minDangerLevel = 1;
-    private const int maxDangerLevel = 10;
-    private int dangerLevel;
-    
     public string locationName;
-    public bool visited;
-    public int distance = -1;
-    [SerializeField]
-    public Location prev;
+    public int DangerLevel { get; private set; }
 
-    public int DangerLevel
-    {
-        get { return dangerLevel; }
-        set
-        {
-            if (value < minDangerLevel)
-                dangerLevel = minDangerLevel;
-            else if (value > maxDangerLevel)
-                dangerLevel = maxDangerLevel;
-            else
-                dangerLevel = value;
-        }
-    }
+    //used for path finding
+    public int dangerSum; //The total danger level of the path leading to this node
+    public bool visited; 
+    public int distance = 100;
+
+    [SerializeField]
+    public Location prev; 
 
     public List<string> connectedLocations = new List<string>();
-    public Dictionary<string, int> edgeWeights = new Dictionary<string, int>();
+    public Dictionary<string, int> distances = new Dictionary<string, int>(); //distances between other nodes
 
     public Location(string locationName, int dangerLevel)
     {
         this.locationName = locationName;
-        this.dangerLevel = dangerLevel;
+        this.DangerLevel = dangerLevel;
     }
 
-    /// <summary>
-    /// Returns true if this location is connected to another location of the given name
-    /// </summary>
+    /// <summary> Returns true if this location is connected to another location of the given name </summary>
     public bool Search(string name)
     {
         foreach(string location in connectedLocations)
@@ -51,7 +36,7 @@ public class Location
         return false;
     }
 
-    /// <summary>Returns true if this location is connected to the given location</summary>
+    /// <summary> Returns true if this location is connected to the given location </summary>
     public bool Search(Location location)
     {
         foreach(string loc in connectedLocations)
