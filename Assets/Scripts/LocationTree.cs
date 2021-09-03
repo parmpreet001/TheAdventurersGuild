@@ -10,9 +10,7 @@ public class LocationTree : MonoBehaviour
     private List<Location> locations = new List<Location>();
 
 
-    /// <summary>
-    /// Creates an undirected link between two locations
-    /// </summary>
+    /// <summary> Creates an undirected link between two locations </summary>
     /// <param name="parentLocationName">Name of the parent location</param>
     /// <param name="childLocation">New Location to be added to parrent</param>
     public void AddLocationLink(string parentLocationName, Location childLocation, int edgeWeight)
@@ -39,8 +37,8 @@ public class LocationTree : MonoBehaviour
                     childLocation.connectedLocations.Add(parentLocationName);
 
                     //Sets edge weight between the two locations
-                    loc.edgeWeights.Add(childLocation.locationName,edgeWeight);
-                    childLocation.edgeWeights.Add(parentLocationName, edgeWeight);
+                    loc.distances.Add(childLocation.locationName,edgeWeight);
+                    childLocation.distances.Add(parentLocationName, edgeWeight);
 
                     return;
                 }
@@ -91,6 +89,7 @@ public class LocationTree : MonoBehaviour
             loc.distance = 100;
             loc.visited = false;
             loc.prev = null;
+            loc.dangerSum = loc.DangerLevel;
         }
 
         startLocation.distance = 0;
@@ -101,10 +100,11 @@ public class LocationTree : MonoBehaviour
             loc.visited = true;
             foreach(string neighbor in loc.connectedLocations)
             {
-                if(loc.distance + loc.edgeWeights[neighbor] < GetLocation(neighbor).distance)
+                if(loc.distance + loc.distances[neighbor] < GetLocation(neighbor).distance)
                 {
-                    GetLocation(neighbor).distance = loc.distance + loc.edgeWeights[neighbor];
+                    GetLocation(neighbor).distance = loc.distance + loc.distances[neighbor];
                     GetLocation(neighbor).prev = loc;
+                    GetLocation(neighbor).dangerSum = loc.dangerSum + GetLocation(neighbor).DangerLevel;
                 }
             }
         }
@@ -115,6 +115,7 @@ public class LocationTree : MonoBehaviour
         path.Push(targetLocation);
         while(path.Peek().locationName != startLocation.locationName)
         {
+            
             path.Push(path.Peek().prev);
         }
 
@@ -174,7 +175,8 @@ public class LocationTree : MonoBehaviour
         Debug.Log("Path from location A to location B");
         while (path.Count > 0)
         {
-            Debug.Log(path.Pop().locationName);
+            Location temp = path.Pop();
+            Debug.Log(temp.locationName + ", Danger Sum: " + temp.dangerSum);
         }      
     }
 }
