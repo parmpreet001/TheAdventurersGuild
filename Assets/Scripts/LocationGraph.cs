@@ -3,48 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LocationTree : MonoBehaviour
+public class LocationGraph : MonoBehaviour
 {
-    private Location root;
     [SerializeField]
     private List<Location> locations = new List<Location>();
 
+    public void AddLocation(Location loc)
+    {
+        locations.Add(loc);
+    }
 
-    /// <summary> Creates an undirected link between two locations </summary>
+    /// <summary>Creates an undirected link between two locations</summary>
     /// <param name="parentLocationName">Name of the parent location</param>
     /// <param name="childLocation">New Location to be added to parrent</param>
     public void AddLocationLink(string parentLocationName, Location childLocation, int edgeWeight)
     {
-        if (root == null)
-            throw new Exception("Exception: A root location has not been set");
-        else
+        foreach(Location loc in locations)
         {
-            foreach(Location loc in locations)
+            //If the parent location exists
+            if(loc.locationName.Equals(parentLocationName))
             {
-                //If the parent location exists
-                if(loc.locationName.Equals(parentLocationName))
+                if (loc.Search(childLocation))
+                    throw new Exception("Exception: The connection that you are trying to add already exists");
+                //Adds link from parent location to child location
+                loc.connectedLocations.Add(childLocation.locationName);
+                //If child location does not already exist in tree
+                if(!Search(childLocation.locationName))
                 {
-                    if (loc.Search(childLocation))
-                        throw new Exception("Exception: The connection that you are trying to add already exists");
-                    //Adds link from parent location to child location
-                    loc.connectedLocations.Add(childLocation.locationName);
-                    //If child location does not already exist in tree
-                    if(!Search(childLocation.locationName))
-                    {
-                        locations.Add(childLocation);
-                    }
-                    //Adds link from child location to parent location
-                    childLocation.connectedLocations.Add(parentLocationName);
-
-                    //Sets edge weight between the two locations
-                    loc.distances.Add(childLocation.locationName,edgeWeight);
-                    childLocation.distances.Add(parentLocationName, edgeWeight);
-
-                    return;
+                    locations.Add(childLocation);
                 }
+                //Adds link from child location to parent location
+                childLocation.connectedLocations.Add(parentLocationName);
+
+                //Sets edge weight between the two locations
+                loc.distances.Add(childLocation.locationName,edgeWeight);
+                childLocation.distances.Add(parentLocationName, edgeWeight);
+
+                return;
             }
-            throw new Exception("Exception: Cannot find location with specified name");
         }
+        throw new Exception("Exception: Cannot find location with specified name");
     }
 
     /// <summary> Returns true if a location exists in the tree </summary>
@@ -72,13 +70,6 @@ public class LocationTree : MonoBehaviour
         }
         throw new Exception("Exception: No location by that name was found");
     }
-
-    public void SetRoot(Location location)
-    {
-        locations.Add(location);
-        root = location;
-    }
-
 
     public Stack<Location> FindPath(Location startLocation, Location targetLocation)
     {
@@ -115,7 +106,6 @@ public class LocationTree : MonoBehaviour
         path.Push(targetLocation);
         while(path.Peek().locationName != startLocation.locationName)
         {
-            
             path.Push(path.Peek().prev);
         }
 
@@ -148,6 +138,7 @@ public class LocationTree : MonoBehaviour
     //Just used for testing. Will get deleted later
     private void Start()
     {
+       
         Location locationA = new Location("location A", 1);
         Location locationB = new Location("location B", 1);
         Location locationC = new Location("location C", 1);
@@ -156,7 +147,7 @@ public class LocationTree : MonoBehaviour
         Location locationF = new Location("location F", 1);
         Location locationG = new Location("location G", 1);
 
-        SetRoot(locationA);
+        locations.Add(locationA);
 
         AddLocationLink("location A", locationC, 3);
         AddLocationLink("location A", locationF, 2);
