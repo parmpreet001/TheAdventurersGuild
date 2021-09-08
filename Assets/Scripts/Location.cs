@@ -12,7 +12,6 @@ public class Location
     public int dangerSum; //The total danger level of the path leading to this node
     public bool visited; 
     public int distance = 100;
-
     [SerializeField]
     public Location prev; 
 
@@ -23,6 +22,12 @@ public class Location
     {
         this.locationName = locationName;
         this.dangerLevel = dangerLevel;
+    }
+
+    public void AddConnection(string locationName, int distance)
+    {
+        connectedLocations.Add(locationName);
+        distances.Add(locationName, distance);
     }
 
     /// <summary> Returns true if this location is connected to another location of the given name </summary>

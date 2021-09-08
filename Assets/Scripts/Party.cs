@@ -80,6 +80,10 @@ public class Party
                 }
             }
         }
+        else
+        {
+            //TODO Damage calculation for enemy
+        }
     }
 
     /// <summary> Returns true if this party's cmp is less than the given party's threat </summary>

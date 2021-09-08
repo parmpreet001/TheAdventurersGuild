@@ -27,10 +27,8 @@ public class LocationGraph : MonoBehaviour
         if(firstLocation.Search(secondLocation))
             throw new Exception("Exception: The connection that you are trying to add already exists");
 
-        firstLocation.connectedLocations.Add(secondLocation.locationName);
-        firstLocation.distances.Add(secondLocation.locationName, distance);
-        secondLocation.connectedLocations.Add(firstLocation.locationName);
-        secondLocation.distances.Add(firstLocation.locationName, distance);
+        firstLocation.AddConnection(secondLocation.locationName, distance);
+        secondLocation.AddConnection(firstLocation.locationName, distance);
     }
 
     /// <summary> Returns true if a location exists in the tree </summary>
@@ -64,39 +62,46 @@ public class LocationGraph : MonoBehaviour
         }
         throw new Exception("Exception: No location by that name was found");
     }
+
     /// <summary> Copies a masterGraph and returns a new playerGraph. Danger values are modified based on party stats </summary>
     /// <param name="masterGraph">Graph to be copied</param>
     /// <param name="sourceLocation">Location the party starts in. Party has full knowledge of this location's stats</param>
     /// <param name="party">Party used for calculations</param>
-    public LocationGraph GetPlayerGraph(LocationGraph masterGraph, Location sourceLocation, Party party)
+    public static LocationGraph GetPlayerGraph(LocationGraph masterGraph, Location sourceLocation, Party party)
     {
         LocationGraph playerGraph = new LocationGraph();
 
         party.CalculatePartyStats();
         int maxIntl = party.members.Count * 100;
         float partyIntl = party.TotalIntl;
+        System.Random rand = new System.Random();
 
         //Adds each location from masterGraph to playerGraph
         foreach(Location loc in masterGraph.locations)
-        {
-            System.Random rand = new System.Random();
+        {   
             int intlCheck = rand.Next(0, maxIntl);
-            //If party succeeds intelligence check
-            if(intlCheck <= maxIntl)
+            //If party succeeds intelligence check, add location to new graph as is
+            if(intlCheck <= partyIntl)
             {
-                locations.Add(new Location(loc.locationName, loc.dangerLevel));
+                Location temp = new Location(loc.locationName, loc.dangerLevel);
+                foreach(KeyValuePair<string, int> entry in loc.distances)
+                    temp.AddConnection(entry.Key, entry.Value);
+                playerGraph.locations.Add(temp);
             }
+            //If party fails intelligence check, calculate danger level using wisdom roll
             else
             {
                 Vector2 bounds = NumericalWisdomRoll(party, loc.dangerLevel, 100);
-                locations.Add(new Location(loc.locationName, rand.Next((int)bounds.x, (int)bounds.y)));
+                Location temp = new Location(loc.locationName, rand.Next((int)bounds.x, (int)bounds.y));
+                foreach (KeyValuePair<string, int> entry in loc.distances)
+                    temp.AddConnection(entry.Key, entry.Value);
+                playerGraph.locations.Add(temp);
             }
         }
 
-
+        //Overrides values in source location
         foreach(Location loc in playerGraph.locations)
         {
-
             if(loc.locationName.Equals(sourceLocation.locationName))
             {
                 loc.dangerLevel = sourceLocation.dangerLevel;
@@ -124,7 +129,6 @@ public class LocationGraph : MonoBehaviour
             //v = (b-m)/ln(h+1)
             double v = (maxItemValue - itemValue) / Math.Log(maxWis + 1);
             int upperBound = Convert.ToInt32(-(Math.Log(maxWis + 1) * v) + maxItemValue);
-
 
             return new Vector2(lowerBound, upperBound);
         }
@@ -191,12 +195,9 @@ public class LocationGraph : MonoBehaviour
         return temp;
     }
 
-
-
     //Just used for testing. Will get deleted later
     private void Start()
-    {
-       
+    {     
         Location locationA = new Location("location A", 1);
         Location locationB = new Location("location B", 1);
         Location locationC = new Location("location C", 1);
@@ -204,11 +205,9 @@ public class LocationGraph : MonoBehaviour
         Location locationE = new Location("location E", 1);
         Location locationF = new Location("location F", 1);
         Location locationG = new Location("location G", 1);
-
         locations.Add(locationA);
 
         AddLocationLink(locationA, locationC, 3);
-        
         AddLocationLink(locationA, locationF, 2);
         AddLocationLink(locationC, locationD, 4);
         AddLocationLink(locationC, locationE, 1);
@@ -229,6 +228,5 @@ public class LocationGraph : MonoBehaviour
             Location temp = path.Pop();
             Debug.Log(temp.locationName + ", Danger Sum: " + temp.dangerSum);
         }
-        
     }
 }
