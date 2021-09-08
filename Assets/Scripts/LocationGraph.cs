@@ -14,35 +14,23 @@ public class LocationGraph : MonoBehaviour
     }
 
     /// <summary>Creates an undirected link between two locations</summary>
-    /// <param name="parentLocationName">Name of the parent location</param>
-    /// <param name="childLocation">New Location to be added to parrent</param>
-    public void AddLocationLink(string parentLocationName, Location childLocation, int edgeWeight)
+    /// <param name="parentLocationName">Name of the first location</param>
+    /// <param name="secondLocation">Name of the second location</param>
+    /// <param name="distance">Distance between the to nodes</param>
+    public void AddLocationLink(Location firstLocation, Location secondLocation, int distance)
     {
-        foreach(Location loc in locations)
-        {
-            //If the parent location exists
-            if(loc.locationName.Equals(parentLocationName))
-            {
-                if (loc.Search(childLocation))
-                    throw new Exception("Exception: The connection that you are trying to add already exists");
-                //Adds link from parent location to child location
-                loc.connectedLocations.Add(childLocation.locationName);
-                //If child location does not already exist in tree
-                if(!Search(childLocation.locationName))
-                {
-                    locations.Add(childLocation);
-                }
-                //Adds link from child location to parent location
-                childLocation.connectedLocations.Add(parentLocationName);
+        if(!Search(firstLocation))
+            locations.Add(firstLocation);
+        if(!Search(secondLocation))
+            locations.Add(secondLocation);
 
-                //Sets edge weight between the two locations
-                loc.distances.Add(childLocation.locationName,edgeWeight);
-                childLocation.distances.Add(parentLocationName, edgeWeight);
+        if(firstLocation.Search(secondLocation))
+            throw new Exception("Exception: The connection that you are trying to add already exists");
 
-                return;
-            }
-        }
-        throw new Exception("Exception: Cannot find location with specified name");
+        firstLocation.connectedLocations.Add(secondLocation.locationName);
+        firstLocation.distances.Add(secondLocation.locationName, distance);
+        secondLocation.connectedLocations.Add(firstLocation.locationName);
+        secondLocation.distances.Add(firstLocation.locationName, distance);
     }
 
     /// <summary> Returns true if a location exists in the tree </summary>
@@ -51,9 +39,17 @@ public class LocationGraph : MonoBehaviour
         foreach(Location loc in locations)
         {
             if(loc.locationName.Equals(name))
-            {
                 return true;
-            }
+        }
+        return false;
+    }
+
+    public bool Search(Location location)
+    {
+        foreach(Location loc in locations)
+        {
+            if (loc.locationName.Equals(location.locationName))
+                return true;
         }
         return false;
     }
@@ -64,9 +60,7 @@ public class LocationGraph : MonoBehaviour
         foreach (Location loc in locations)
         {
             if (loc.locationName.Equals(name))
-            {
                 return loc;
-            }
         }
         throw new Exception("Exception: No location by that name was found");
     }
@@ -149,17 +143,19 @@ public class LocationGraph : MonoBehaviour
 
         locations.Add(locationA);
 
-        AddLocationLink("location A", locationC, 3);
-        AddLocationLink("location A", locationF, 2);
-        AddLocationLink("location C", locationD, 4);
-        AddLocationLink("location C", locationE, 1);
-        AddLocationLink("location C", locationF, 2);
-        AddLocationLink("location F", locationE, 3);
-        AddLocationLink("location F", locationB, 6);
-        AddLocationLink("location F", locationG, 5);
-        AddLocationLink("location E", locationB, 2);
-        AddLocationLink("location D", locationB, 1);
-        AddLocationLink("location G", locationB, 2);
+        AddLocationLink(locationA, locationC, 3);
+        
+        AddLocationLink(locationA, locationF, 2);
+        AddLocationLink(locationC, locationD, 4);
+        AddLocationLink(locationC, locationE, 1);
+        AddLocationLink(locationC, locationF, 2);
+        AddLocationLink(locationF, locationE, 3);
+        AddLocationLink(locationF, locationB, 6);
+        AddLocationLink(locationF, locationG, 5);
+        AddLocationLink(locationE, locationB, 2);
+        AddLocationLink(locationD, locationB, 1);
+        AddLocationLink(locationG, locationB, 2);
+        
 
         Stack<Location> path = FindPath(locationA, locationB);
 
@@ -168,6 +164,7 @@ public class LocationGraph : MonoBehaviour
         {
             Location temp = path.Pop();
             Debug.Log(temp.locationName + ", Danger Sum: " + temp.dangerSum);
-        }      
+        }
+        
     }
 }
