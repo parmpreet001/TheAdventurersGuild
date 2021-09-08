@@ -6,7 +6,7 @@ using UnityEngine;
 public class Location
 {
     public string locationName;
-    public int DangerLevel { get; private set; }
+    public int dangerLevel;
 
     //used for path finding
     public int dangerSum; //The total danger level of the path leading to this node
@@ -22,7 +22,7 @@ public class Location
     public Location(string locationName, int dangerLevel)
     {
         this.locationName = locationName;
-        this.DangerLevel = dangerLevel;
+        this.dangerLevel = dangerLevel;
     }
 
     /// <summary> Returns true if this location is connected to another location of the given name </summary>

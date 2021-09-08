@@ -64,7 +64,71 @@ public class LocationGraph : MonoBehaviour
         }
         throw new Exception("Exception: No location by that name was found");
     }
+    /// <summary> Copies a masterGraph and returns a new playerGraph. Danger values are modified based on party stats </summary>
+    /// <param name="masterGraph">Graph to be copied</param>
+    /// <param name="sourceLocation">Location the party starts in. Party has full knowledge of this location's stats</param>
+    /// <param name="party">Party used for calculations</param>
+    public LocationGraph GetPlayerGraph(LocationGraph masterGraph, Location sourceLocation, Party party)
+    {
+        LocationGraph playerGraph = new LocationGraph();
 
+        party.CalculatePartyStats();
+        int maxIntl = party.members.Count * 100;
+        float partyIntl = party.TotalIntl;
+
+        //Adds each location from masterGraph to playerGraph
+        foreach(Location loc in masterGraph.locations)
+        {
+            System.Random rand = new System.Random();
+            int intlCheck = rand.Next(0, maxIntl);
+            //If party succeeds intelligence check
+            if(intlCheck <= maxIntl)
+            {
+                locations.Add(new Location(loc.locationName, loc.dangerLevel));
+            }
+            else
+            {
+                Vector2 bounds = NumericalWisdomRoll(party, loc.dangerLevel, 100);
+                locations.Add(new Location(loc.locationName, rand.Next((int)bounds.x, (int)bounds.y)));
+            }
+        }
+
+
+        foreach(Location loc in playerGraph.locations)
+        {
+
+            if(loc.locationName.Equals(sourceLocation.locationName))
+            {
+                loc.dangerLevel = sourceLocation.dangerLevel;
+            }
+        }
+
+        return playerGraph;
+
+        Vector2 NumericalWisdomRoll(Party party, int itemValue, int maxItemValue)
+        {
+            //m = itemValue
+            //h = maxWisdom
+            //b = maxItemValue
+            //X-axis is partyWisdom
+            //Y-axis is bound range
+            int maxWis = party.members.Count * 100;
+            float partyWis = party.TotalWis;
+
+            //lowerBound = ln(h+1)u
+            //u = (m/ln(h+1))
+            double u = itemValue / Math.Log(maxWis + 1);
+            int lowerBound = Convert.ToInt32(Math.Log(maxWis + 1) * u);
+
+            //upperBound = -(ln(h+1)v) + b
+            //v = (b-m)/ln(h+1)
+            double v = (maxItemValue - itemValue) / Math.Log(maxWis + 1);
+            int upperBound = Convert.ToInt32(-(Math.Log(maxWis + 1) * v) + maxItemValue);
+
+
+            return new Vector2(lowerBound, upperBound);
+        }
+    }
     public Stack<Location> FindPath(Location startLocation, Location targetLocation)
     {
         Stack<Location> path = new Stack<Location>();
@@ -74,7 +138,7 @@ public class LocationGraph : MonoBehaviour
             loc.distance = 100;
             loc.visited = false;
             loc.prev = null;
-            loc.dangerSum = loc.DangerLevel;
+            loc.dangerSum = loc.dangerLevel;
         }
 
         startLocation.distance = 0;
@@ -89,7 +153,7 @@ public class LocationGraph : MonoBehaviour
                 {
                     GetLocation(neighbor).distance = loc.distance + loc.distances[neighbor];
                     GetLocation(neighbor).prev = loc;
-                    GetLocation(neighbor).dangerSum = loc.dangerSum + GetLocation(neighbor).DangerLevel;
+                    GetLocation(neighbor).dangerSum = loc.dangerSum + GetLocation(neighbor).dangerLevel;
                 }
             }
         }
