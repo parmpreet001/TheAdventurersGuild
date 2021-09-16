@@ -1,11 +1,11 @@
 public struct EntityStats
 {
-    public float hp;
+    public float hp, maxHp;
     public int atk, trt, cmp, intl, wis;
 
     public EntityStats(int hp, int atk, int trt, int cmp, int intl, int wis)
     {
-        this.hp = hp;
+        this.hp = maxHp = hp;
         this.atk = atk;
         this.trt = trt;
         this.cmp = cmp;
@@ -16,7 +16,7 @@ public struct EntityStats
     //Copy constructor
     public EntityStats(EntityStats stats)
     {
-        hp = stats.hp;
+        hp = maxHp = stats.hp;
         atk = stats.atk;
         trt = stats.trt;
         cmp = stats.cmp;
