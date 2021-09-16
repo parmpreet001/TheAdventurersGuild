@@ -24,6 +24,20 @@ public class Roster
         guildMembers.Add(newMember.entityName, newMember);
     }
 
+    /// <summary>
+    /// Returns a guild member of the specified name. Case sensitive
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public Adventurer GetGuildMember(string name)
+    {
+        if (guildMembers.ContainsKey(name))
+            return guildMembers[name];
+        else
+            throw new Exception("Error: Guild member of this name does not exist");
+
+    }
+
     /// <summary> Set a bond level between two guild members. </summary>
     public void SetBondLevel(string name1, string name2, float bondLevel)
     {
