@@ -7,7 +7,14 @@ public class Enemy : Entity
     public int experienceYield;
     public Enemy(string name, EntityStats stats)
     {
-        base.entityName = name;
+        entityName = name;
         this.stats = stats;
+    }
+
+    //Copy constructor
+    public Enemy(Enemy enemy)
+    {
+        entityName = enemy.entityName;
+        stats = new EntityStats(enemy.stats);
     }
 }
