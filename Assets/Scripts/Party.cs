@@ -73,7 +73,7 @@ public class Party
         {
             foreach(Adventurer member in members)
             {
-                member.stats.hp -= (float)Math.Round((damage * (member.CalculateTrt() / TotalTrt)),1);
+                member.stats.hp -= (float)Math.Round(damage * (member.CalculateTrt() / TotalTrt),1);
                 Debug.Log(member.entityName + " took " + (float)Math.Round((damage * (member.CalculateTrt() / TotalTrt)), 1) + " damage");
                 if (member.stats.hp <= 0)
                 {
@@ -84,7 +84,16 @@ public class Party
         }
         else
         {
-            //TODO Damage calculation for enemy
+            foreach(Enemy member in members)
+            {
+                member.stats.hp -= (float)Math.Round(damage * (member.stats.trt / TotalTrt), 1);
+                Debug.Log(member.entityName + " took " + (float)Math.Round(damage * (member.stats.trt / TotalTrt), 1) + " damage.");
+                if (member.stats.hp <= 0)
+                {
+                    member.isDead = true;
+                    Debug.Log(member.entityName + " fucking died");
+                }
+            }
         }
     }
 
