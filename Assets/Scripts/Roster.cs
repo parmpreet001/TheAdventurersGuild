@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Roster
 {
     private Dictionary<string, Adventurer> guildMembers = new Dictionary<string, Adventurer>();

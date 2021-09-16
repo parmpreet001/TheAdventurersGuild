@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[Serializable]
 public class Party
 {
     public enum PartyType
@@ -10,6 +11,7 @@ public class Party
         ENEMY, ADVENTURER
     }
 
+    [SerializeField]
     public List<Entity> members = new List<Entity>();
     public float TotalHp { get; private set; }
     public float TotalAtk { get; private set; }
@@ -65,7 +67,7 @@ public class Party
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if(partyType == PartyType.ADVENTURER)
         {
